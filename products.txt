@@ -1,0 +1,36 @@
+1;Phone;4000;smart;3
+2;Smart Watch S3;2500;smart;10
+3;iPhone 12;21000;smart;5
+4;Samsung Galaxy S21;18500;smart;7
+5;Xiaomi Redmi Note 11;7200;smart;12
+
+6;Java for beginners;450;books;10
+7;C++ Primer;900;books;6
+8;Clean Code;1100;books;8
+9;Python Crash Course;950;books;4
+10;Algorithms Unlocked;800;books;5
+
+11;Mouse Logitech M185;700;peripherals;8
+12;Keyboard Redragon K552;1500;peripherals;4
+13;Webcam Logitech C270;1300;peripherals;6
+14;USB Hub 4-port;350;peripherals;20
+15;Monitor LG 24'';5200;peripherals;3
+
+16;Python course;550;courses;3
+17;Frontend Bootcamp;3900;courses;5
+18;Data Science Intro;4500;courses;2
+19;Linux for Beginners;1700;courses;6
+20;Algorithms Course;3000;courses;4
+
+21;Acer Aspire 5;19500;laptops;4
+22;HP Pavilion 15;22000;laptops;3
+23;Lenovo ThinkPad E14;26500;laptops;2
+24;MacBook Air M1;35000;laptops;1
+25;Dell Inspiron 3511;18500;laptops;5
+
+26;Bluetooth Headphones;1600;audio;10
+27;Portable Speaker JBL;2800;audio;7
+28;Wired Headset Sony;850;audio;12
+
+29;Vacuum Cleaner Xiaomi;4200;home;4
+30;Electric Kettle Philips;1100;home;9
