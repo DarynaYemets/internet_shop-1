@@ -1,4 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -201,7 +201,6 @@ bool editProductById(int id) {
     cout << "Товар оновлено.\n";
     return true;
 }
-
 // Пошук по фрагменту назви
 void searchByNameSimple() {
     cin.ignore(10000, '\n');
@@ -228,7 +227,6 @@ void searchByNameSimple() {
 }
 
 // ПОШУК ЗА ФІЛЬТРАМИ ДЛЯ КОРИСТУВАЧА
-
 void inputFilters(string& name, string& category, double& minPrice, double& maxPrice) {
     cout << "Введіть назву (або '-' для пропуску): ";
     cin >> name;
@@ -292,7 +290,7 @@ string trim(const string& s) {
     while (i <= j && isspace((unsigned char)s[i])) i++;
     while (j >= i && isspace((unsigned char)s[j])) j--;
     if (i > j) return "";
-    return s.substr(i, j - i + 1);
+    return s.substr(i, j + 1);
 }
 
 bool luhnValid(const string& digits) {
@@ -451,8 +449,7 @@ PaymentResult processPayment(double amount, PayMethod method, const CardData& ca
 
     return { false, "INVALID_INPUT", "Непідтримуваний спосіб оплати.", "" };
 }
-
-// ОФОРМЛЕННЯ ЗАМОВЛЕННЯ 
+// ===================== ОФОРМЛЕННЯ ЗАМОВЛЕННЯ ======================
 
 double calculateSum(double price, int quantity) {
     return price * quantity;
@@ -517,7 +514,7 @@ void makeOrderForProduct(int prodIndex) {
     }
 }
 
-// СЦЕНАРІЇ ДЛЯ КОРИСТУВАЧА ЧИ АДМІНА
+// ===================== СЦЕНАРІЇ ДЛЯ КОРИСТУВАЧА ======================
 
 void userShoppingFlow() {
     if (productCount == 0) {
@@ -554,11 +551,26 @@ void userShoppingFlow() {
     cout << "\nВведіть ID товару для оформлення замовлення: ";
     cin >> selectedID;
 
+    // 🔴 ВИПРАВЛЕНА ЛОГІКА: перевірка, чи ID є серед знайдених
+    bool idFoundInResults = false;
+    for (int i = 0; i < foundCount; ++i) {
+        if (foundIds[i] == selectedID) {
+            idFoundInResults = true;
+            break;
+        }
+    }
+
+    if (!idFoundInResults) {
+        cout << "Введений ID не входить до переліку знайдених товарів.\n";
+        return;
+    }
+
     int idx = findIndexById(selectedID);
     if (idx == -1) {
         cout << "Товар з таким ID не знайдено.\n";
         return;
     }
+
     if (quantitiesArr[idx] <= 0) {
         cout << "Цей товар відсутній на складі.\n";
         return;
@@ -566,6 +578,8 @@ void userShoppingFlow() {
 
     makeOrderForProduct(idx);
 }
+
+// ===================== АДМІН-МЕНЮ ======================
 
 void adminCatalogMenu(const string& filename) {
     while (true) {
@@ -673,3 +687,5 @@ int main() {
 
     return 0;
 }
+
+
