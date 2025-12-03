@@ -1,4 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -6,8 +6,11 @@
 #include <iomanip>
 #include <ctime>
 #include <cctype>
+#include <limits>
+#include <algorithm>   // для std::swap
 
 #ifdef _WIN32
+#define NOMINMAX       // щоб макрос max з windows.h не ламав numeric_limits::max()
 #include <windows.h>
 #endif
 
@@ -227,27 +230,88 @@ void searchByNameSimple() {
     }
 }
 
+// ===================== ДОПОМІЖНІ ФУНКЦІЇ ДЛЯ РЯДКІВ ======================
+
+string trim(const string& s) {
+    int i = 0, j = (int)s.size() - 1;
+    while (i <= j && isspace((unsigned char)s[i])) i++;
+    while (j >= i && isspace((unsigned char)s[j])) j--;
+    if (i > j) return "";
+    return s.substr(i, j - i + 1);
+}
+
 // ПОШУК ЗА ФІЛЬТРАМИ ДЛЯ КОРИСТУВАЧА
 
 void inputFilters(string& name, string& category, double& minPrice, double& maxPrice) {
+
+    cin.clear();
+    cin.ignore((numeric_limits<streamsize>::max)(), '\n');  // (max) щоб не чіпався макрос
+
     cout << "Введіть назву (або '-' для пропуску): ";
-    cin >> name;
+    getline(cin, name);
+    name = trim(name);
+
+    // Якщо користувач перед назвою випадково вставив ';'
+    if (!name.empty() && name[0] == ';') {
+        name.erase(0, 1);        // видалити ';'
+        name = trim(name);       // ще раз підрізати пробіли
+    }
+    if (name.empty()) {
+        name = "-"; // без фільтра по назві
+    }
 
     cout << "Введіть категорію (або '-' для пропуску): ";
-    cin >> category;
+    getline(cin, category);
+    category = trim(category);
+    if (category.empty()) {
+        category = "-"; // без фільтра по категорії
+    }
 
-    cout << "Мінімальна ціна: ";
-    cin >> minPrice;
+    string line;
 
-    cout << "Максимальна ціна: ";
-    cin >> maxPrice;
+    cout << "Мінімальна ціна (порожньо = 0): ";
+    getline(cin, line);
+    line = trim(line);
+    if (line.empty()) {
+        minPrice = 0.0;
+    }
+    else {
+        try {
+            minPrice = stod(line);
+        }
+        catch (...) {
+            minPrice = 0.0;
+        }
+    }
+
+    cout << "Максимальна ціна (порожньо = без обмеження): ";
+    getline(cin, line);
+    line = trim(line);
+    if (line.empty()) {
+        maxPrice = 1e12; // умовно «нескінченність»
+    }
+    else {
+        try {
+            maxPrice = stod(line);
+        }
+        catch (...) {
+            maxPrice = 1e12;
+        }
+    }
+
+    // На всякий випадок – якщо користувач переплутав місцями
+    if (minPrice > maxPrice) {
+        std::swap(minPrice, maxPrice);
+    }
 }
 
-bool matchProductFilters(int idx,
+bool matchProductFilters(
+    int idx,
     const string& name,
     const string& category,
     double minP,
-    double maxP) {
+    double maxP
+) {
     bool nameOk = (name == "-" || namesArr[idx].find(name) != string::npos);
     bool catOk = (category == "-" || categoriesArr[idx] == category);
     bool priceOk = (pricesArr[idx] >= minP && pricesArr[idx] <= maxP);
@@ -285,14 +349,6 @@ string digitsOnly(const string& s) {
     string r;
     for (char ch : s) if (isdigit((unsigned char)ch)) r.push_back(ch);
     return r;
-}
-
-string trim(const string& s) {
-    int i = 0, j = (int)s.size() - 1;
-    while (i <= j && isspace((unsigned char)s[i])) i++;
-    while (j >= i && isspace((unsigned char)s[j])) j--;
-    if (i > j) return "";
-    return s.substr(i, j - i + 1);
 }
 
 bool luhnValid(const string& digits) {
