@@ -241,6 +241,10 @@ void inputFilters(string& name, string& category, double& minPrice, double& maxP
 
     cout << "Максимальна ціна: ";
     cin >> maxPrice;
+            if (!cin) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+        }
 }
 
 bool matchProductFilters(int idx,
